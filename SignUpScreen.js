@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, KeyboardAvoidingView } from 'react-native';
+import { View, KeyboardAvoidingView } from 'react-native';
+import { Text, TextInput, Button } from 'react-native-paper';
 import { FIREBASE_AUTH } from './FirebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 
@@ -8,10 +9,9 @@ export default function SignUpScreen({ navigation }) {
   const [password, setPassword] = useState('');
   const auth = FIREBASE_AUTH;
 
-  const handleSignUp = async () =>  {
+  const handleSignUp = async () => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      //await createUserWithEmailAndPassword(auth, "email@gmail.com", "password");
       alert('Registration successful!');
       navigation.navigate('Welcome');
     } catch (error) {
@@ -20,21 +20,25 @@ export default function SignUpScreen({ navigation }) {
   };
 
   return (
-    <View>
-      <KeyboardAvoidingView behaviour="padding">
-      <Text>Create Account</Text>
-      <TextInput
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
-      <Button title="Create Account" onPress={handleSignUp} />
+    <View style={{ flex: 1, justifyContent: 'center', paddingHorizontal: 20 }}>
+      <KeyboardAvoidingView behavior="padding">
+        <Text style={{ fontSize: 24, marginBottom: 20 }}>Create Account</Text>
+        <TextInput
+          label="Email"
+          value={email}
+          onChangeText={setEmail}
+          style={{ marginBottom: 20 }}
+        />
+        <TextInput
+          label="Password"
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
+          style={{ marginBottom: 20 }}
+        />
+        <Button mode="contained" onPress={handleSignUp}>
+          Create Account
+        </Button>
       </KeyboardAvoidingView>
     </View>
   );

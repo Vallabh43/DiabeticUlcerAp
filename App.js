@@ -7,8 +7,19 @@ import SignUpScreen from './SignUpScreen';
 import HomeScreen from './HomeScreen';
 import HistoryScreen from './HistoryScreen';
 import ImageCaptureScreen from './ImageCaptureScreen';
+import ResultScreen from './ResultScreen';
 import { onAuthStateChanged } from 'firebase/auth';
 import { FIREBASE_AUTH } from './FirebaseConfig';
+import { MD3LightTheme as DefaultTheme, PaperProvider } from 'react-native-paper';
+
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: 'tomato',
+    secondary: 'yellow',
+  },
+};
 
 const Stack = createStackNavigator();
 
@@ -29,6 +40,7 @@ function AppNavigator() {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="History" component={HistoryScreen} />
         <Stack.Screen name="ImageCapture" component={ImageCaptureScreen} />
+        <Stack.Screen name="Result" component={ResultScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -36,6 +48,8 @@ function AppNavigator() {
 
 export default function App() {
   return (
+    <PaperProvider theme={theme}>
     <AppNavigator />
+    </PaperProvider>
   );
 }
