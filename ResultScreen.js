@@ -1,18 +1,24 @@
-import React, { useEffect } from 'react';
-import { View, Text } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, Image } from 'react-native';
 import { Button, Card, Title, Paragraph } from 'react-native-paper';
-import { FIREBASE_RTDB, FIREBASE_AUTH } from './FirebaseConfig'; // Import your Firebase RTDB configuration
+import { FIREBASE_RTDB, FIREBASE_AUTH } from './FirebaseConfig';
 import { getDatabase, ref, child, push, update } from "firebase/database";
+
 
 export default function ResultScreen({ navigation, route }) {
   const { diagnosisResult } = route.params;
+  const [imageSource, setImageSource] = useState(null);
 
-  // Function to save prediction and timestamp to Firebase Realtime Database
   const saveToDatabase = (prediction) => {
-    const timestamp = Date.now(); // Get current timestamp
-    const user = FIREBASE_AUTH.currentUser; // Assuming you have a current user
+    const timestamp = Date.now();
+    const user = FIREBASE_AUTH.currentUser;
 
-    // Push the prediction and timestamp to the database
+    // Assuming diagnosisResult has the base64 encoded image in the 'imageBase64' field
+    const { imageBase64 } = diagnosisResult;
+
+    setImageSource({ uri: `data:image/jpeg;base64,${imageBase64}` });
+
+    // Rest of the database save logic
     push(ref(FIREBASE_RTDB, `user_predictions/${user.uid}`), {
       prediction,
       timestamp,
@@ -30,10 +36,10 @@ export default function ResultScreen({ navigation, route }) {
       <Card style={{ width: '80%' }}>
         <Card.Content style={{ alignItems: 'center' }}>
           <Title style={{ fontSize: 24, marginBottom: 10 }}>Diagnosis Result</Title>
+          {imageSource && <Image source={imageSource} style={{ width: 200, height: 200, marginBottom: 10 }} />}
           <Paragraph style={{ fontSize: 18, marginBottom: 20 }}>
             Result: {diagnosisResult ? diagnosisResult.prediction : 'No prediction available'}
           </Paragraph>
-          {/* Display additional information if needed */}
         </Card.Content>
         <Card.Actions style={{ justifyContent: 'center', marginTop: 20 }}>
           <Button mode="contained" onPress={() => navigation.navigate('Home')}>
